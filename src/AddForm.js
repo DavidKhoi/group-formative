@@ -5,9 +5,23 @@ class AddForm extends Component{
         super(props);
     }
 
+    handleSubmit = (e) => {
+        e.prevenDefault()
+        var formData = new FormData(this.addForm)
+        var data = {
+            name:formData.get('name-input'),
+            description:formData.get('description-input'),
+            site:formData.get('site-input'),
+            photo:formData.get('photo-input')
+        }
+
+        this.props.addProject(data)
+        this.props.setActiveView('portfolio')
+    }
+
     render(){
         return(
-            <form>
+            <form onSubmit={this.handleSubmit} ref={(el) => {this.addForm = el}}>
                 <div className="form-group">
                     <input type="text" className="form-control" name="name-input" placeholder="Project Title"/>
                 </div>

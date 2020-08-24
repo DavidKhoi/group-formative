@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import axios from 'axios';
 
 import View from './View';
 import Project from './Project';
 import AddForm from './AddForm';
 import EditForm from './EditForm';
+
+var urlPrefix = 'http://localhost:4000/api'
 
 class App extends Component {
   constructor(props){
@@ -29,6 +32,24 @@ class App extends Component {
 
   setActiveView = (view) => {
     this.setState({activeView:view})
+  }
+
+  getProjects = () => {
+    axios.get(urlPrefix + '/portfolio')
+    .then(res => {
+      this.setState({projects:res.data})
+    })
+  }
+
+  addProject = (data) => {
+    axios.get(urlPrefix + '/portfolio',data)
+    .then(res => {
+      this.getProjects()
+    })
+  }
+
+  componentDidMount(){
+    this.getProjects()
   }
 
   render(){
@@ -75,7 +96,7 @@ class App extends Component {
             <i onClick={() => this.setActiveView('projects')} className="fas fa-long-arrow-alt-left"></i>
           </div>
           <h3>Add Project</h3>
-          <AddForm/>
+          <AddForm addProject={this.addProject} setActiveView={this.setActiveView}/>
         </View>
         
         <View viewName="edit-project" activeView={this.state.activeView} className="edit">

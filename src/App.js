@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
 import axios from 'axios';
 
 import View from './View';
@@ -8,7 +6,9 @@ import Project from './Project';
 import AddForm from './AddForm';
 import EditForm from './EditForm';
 
-var urlPrefix = 'http://localhost:4000/api'
+import './App.css';
+
+var urlPrefix = 'http://localhost:3002/api'
 
 class App extends Component {
   constructor(props){
@@ -34,10 +34,13 @@ class App extends Component {
     this.setState({activeView:view})
   }
 
+  //CRUD methods using API
+
   getProjects = () => {
     axios.get(urlPrefix + '/portfolio')
     .then(res => {
       this.setState({projects:res.data})
+      console.log(this.state.projects)
     })
   }
 
@@ -45,6 +48,13 @@ class App extends Component {
     axios.get(urlPrefix + '/portfolio',data)
     .then(res => {
       this.getProjects()
+    })
+  }
+
+  deleteProject = (id) => {
+    axios.delete(urlPrefix+'/portfolio/'+id)
+    .then(res => {
+      this.getProjects();
     })
   }
 
@@ -64,7 +74,9 @@ class App extends Component {
               <div className="profile">
                 <img className="profile-image" src='prifle.jpg' alt="profileimg"/>
                 <div className="profile-text">
-                  <h1>Ruel Vincent</h1>
+                  {/* <h1>{this.state.projects[0].author}</h1> */}
+                  {/* <h1>{this.state.projects[0].author}</h1> */}
+                  <h1>{this.state.projects.length>0 ? this.state.projects[0].author : 'John Doe'}</h1>
                   <div className="follow">
                     <div className="following">
                       <p>Following</p>
@@ -83,9 +95,10 @@ class App extends Component {
                 this.state.projects.map((project) => {
                   var projectProps = {
                     ...project,
+                    key: project.id,
                     setActiveView: this.setActiveView,
                   }
-                  return (<Project {...projectProps} />)
+                  return (<Project {...projectProps}/>)
                 })
               }
             </div>

@@ -88,6 +88,9 @@ width: 100%;
 .site{
     color: gray;
     font-weight: normal;
+    display: block;
+    word-break: break-all;
+    white-space: normal;
 }
 .project-icon{
     font-size: 1.2em;

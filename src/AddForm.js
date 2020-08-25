@@ -6,17 +6,18 @@ class AddForm extends Component{
     }
 
     handleSubmit = (e) => {
-        e.prevenDefault()
+        e.preventDefault()
         var formData = new FormData(this.addForm)
         var data = {
             name:formData.get('name-input'),
-            description:formData.get('description-input'),
-            site:formData.get('site-input'),
-            photo:formData.get('photo-input')
+            author:formData.get('author-input'),
+            url:formData.get('site-input'),
+            imageUrl:formData.get('photo-input')
         }
 
-        this.props.addProject(data)
-        this.props.setActiveView('portfolio')
+        var {addProject,setActiveView} = this.props
+        addProject(data)
+        setActiveView('projects')
     }
 
     render(){
@@ -26,7 +27,7 @@ class AddForm extends Component{
                     <input type="text" className="form-control" name="name-input" placeholder="Project Title"/>
                 </div>
                 <div className="form-group">
-                    <input type="text" className="form-control" name="description-input" placeholder="Name"/>
+                    <input type="text" className="form-control" name="author-input" placeholder="Name"/>
                 </div>
                 <div className="form-group">
                     <input type="text" className="form-control" name="site-input" placeholder="URL link"/>

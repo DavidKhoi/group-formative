@@ -20,32 +20,56 @@ class App extends Component {
         {
           id:1,
           name:'Morning in Waiheke',
-          description: 'Painting by a local artist'
+          author: 'Painting by a local artist'
         },{
           id:2,
           name:'The thinking man',
-          description: 'Bronze sculpture fitted for morden office space'
+          author: 'Bronze sculpture fitted for morden office space'
         }
       ],
+      
+ projectToUpdate:{
+  id:2,
+  name:'The thinking man',
+  author: 'Bronze sculpture fitted for morden office space',
+  url:'www.alkdjsf.com'
+}
+
     }
   }
 
   setActiveView = (view) => {
     this.setState({activeView:view})
   }
+  setProjectToUpdate = (id) => {
+ 
+    var foundProject = this.state.projects.find((project) => {
+      return project.id === id
+    })
+ 
+    this.setState({projectToUpdate:foundProject})
+  }
 
   //CRUD methods using API
+  updateProject = (id,data) => {
+    console.log(data)
+    axios.put(urlPrefix+'/portfolio/'+id,data)
+    .then(res => {
+      this.getProjects()
+    })
+  }
 
   getProjects = () => {
     axios.get(urlPrefix + '/portfolio')
     .then(res => {
       this.setState({projects:res.data})
-      console.log(this.state.projects)
+      
     })
   }
 
   addProject = (data) => {
-    axios.get(urlPrefix + '/portfolio',data)
+    console.log(data)
+    axios.post(urlPrefix + '/portfolio',data)
     .then(res => {
       this.getProjects()
     })
@@ -68,15 +92,15 @@ class App extends Component {
         <View viewName="projects" activeView={this.state.activeView} className="home">
           <div className="header">
               <div className="nav">
-                  <i onClick={() => this.setActiveView('nav')} className="fas fa-ellipsis-v"></i>
+                  <i className="fas fa-ellipsis-v"></i>
                   <i onClick={() => this.setActiveView('add-project')} className="fas fa-plus"></i>
               </div>
               <div className="profile">
                 <img className="profile-image" src='prifle.jpg' alt="profileimg"/>
                 <div className="profile-text">
+                  <h1>Ruel Vincent</h1>
                   {/* <h1>{this.state.projects[0].author}</h1> */}
-                  {/* <h1>{this.state.projects[0].author}</h1> */}
-                  <h1>{this.state.projects.length>0 ? this.state.projects[0].author : 'John Doe'}</h1>
+                  {/* <h1>{this.state.projects.length>0 ? this.state.projects[0].author : 'John Doe'}</h1> */}
                   <div className="follow">
                     <div className="following">
                       <p>Following</p>
@@ -97,6 +121,8 @@ class App extends Component {
                     ...project,
                     key: project.id,
                     setActiveView: this.setActiveView,
+                    deleteProject:this.deleteProject,
+                    setProjectToUpdate: this.setProjectToUpdate
                   }
                   return (<Project {...projectProps}/>)
                 })
@@ -112,12 +138,12 @@ class App extends Component {
           <AddForm addProject={this.addProject} setActiveView={this.setActiveView}/>
         </View>
         
-        <View viewName="edit-project" activeView={this.state.activeView} className="edit">
+        <View viewName="update-project" activeView={this.state.activeView} className="edit">
           <div className="back-icon">
             <i onClick={() => this.setActiveView('projects')} className="fas fa-long-arrow-alt-left"></i>
           </div>
           <h3>Edit Project</h3>
-          <EditForm/>
+          <EditForm {...this.state.projectToUpdate} updateProject={this.updateProject} setActiveView={this.setActiveView}/>
        </View>
     </div>
     )

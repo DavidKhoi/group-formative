@@ -1,6 +1,16 @@
 import React, {Component} from 'react';
 
 class  Project extends Component {
+    handleTrashClick = () => {
+        var {deleteProject,id} = this.props;
+ 
+        deleteProject(id);
+    }
+    handleUpdateClick = () => {
+        var {setActiveView,setProjectToUpdate,id} = this.props
+        setProjectToUpdate(id)
+        setActiveView('update-project')
+    }
 
   	render(){
 	    return (
@@ -13,8 +23,8 @@ class  Project extends Component {
                         <p><span className="site">{this.props.url}</span></p>
                     </div>
                     <div className="project-icon">
-                        <i className="far fa-edit"></i>
-                        <i className="far fa-trash-alt"></i>
+                        <i onClick={this.handleUpdateClick} className="far fa-edit"></i>
+                        <i onClick={this.handleTrashClick} className="far fa-trash-alt"></i>
                     </div>
                 </div>
             </div>
